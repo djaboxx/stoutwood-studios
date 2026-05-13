@@ -1,3 +1,24 @@
 {
-  "_note": "This file is created by the Brand Manager Setup Wizard. Run 'Brand Manager: Setup Wizard' from the Command Palette to generate it, or copy the structure from database/brand.example.json."
+  "palette": {
+    "background": "#f5f0eb",
+    "primary": "#044f9f",
+    "accent": "#2b04b9",
+    "text": "#044f9f",
+    "text_muted": "#5a5a5a"
+  },
+  "aesthetic": "raw wood grain, oak and smoke and a big fat toke",
+  "imagery_vocabulary": [],
+  "composition_rules": [
+    "Generous negative space — never crowd the frame",
+    "Single focal point",
+    "Natural light preferred",
+    "Color palette stays within the brand range"
+  ],
+  "prohibition": "",
+  "people_policy": "Faces are optional. When a person appears, they may be partial — hands, silhouette, or gesture.",
+  "video": {
+    "transitions": "Slow crossfades only.",
+    "motion": "Gentle parallax, slow zoom. No quick pans.",
+    "text_overlays": "Sparse. Single words or short phrases."
+  }
 }

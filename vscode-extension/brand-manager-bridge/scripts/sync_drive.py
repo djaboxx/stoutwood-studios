@@ -159,9 +159,15 @@ def main() -> None:
     parser.add_argument("--dry-run", action="store_true", help="List files without uploading")
     args = parser.parse_args()
 
-    sa_json = os.environ.get("GOOGLE_DRIVE_SERVICE_ACCOUNT_JSON") or require_env(
+    _sa_raw = os.environ.get("GOOGLE_DRIVE_SERVICE_ACCOUNT_JSON") or require_env(
         "GOOGLE_DRIVE_SERVICE_ACCOUNT_JSON"
     )
+    # Allow the env var to be a file path instead of inlined JSON
+    _sa_path = Path(_sa_raw.strip())
+    if not _sa_raw.strip().startswith("{") and _sa_path.exists():
+        sa_json = _sa_path.read_text()
+    else:
+        sa_json = _sa_raw
     folder_id = os.environ.get("GOOGLE_DRIVE_FOLDER_ID") or require_env("GOOGLE_DRIVE_FOLDER_ID")
 
     stats: dict[str, int] = {"synced": 0, "failed": 0, "pending": 0}

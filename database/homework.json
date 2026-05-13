@@ -71,7 +71,7 @@
       "status": "not-started",
       "ai_doable": true,
       "ai_action": "python scripts/do_homework.py message-angles",
-      "owner_action": "Pick 3-5 that ring true. AI uses these as content pillars for /weekly-content.",
+      "owner_action": "Pick 3-5 that ring true. AI uses these as content pillars for weekly content.",
       "notes": "AI generates 8 angles, owner narrows to 3-5."
     },
     {
@@ -84,7 +84,7 @@
       "ai_doable": true,
       "ai_action": "python scripts/build_pitch.py one-pager",
       "owner_action": "Review, edit if needed, send to first prospect.",
-      "notes": "Already has a script — build_pitch.py one-pager."
+      "notes": "build_pitch.py one-pager"
     },
     {
       "id": "warm-outreach",
@@ -108,7 +108,7 @@
       "ai_doable": true,
       "ai_action": "python scripts/manage_leads.py list",
       "owner_action": "Add each warm contact: python scripts/manage_leads.py add --name ... etc.",
-      "notes": "Tracker already exists — manage_leads.py. AI can populate from a CSV."
+      "notes": "Lead tracker is manage_leads.py. AI can populate from a CSV."
     },
     {
       "id": "offer-doc",
@@ -173,7 +173,7 @@
     {
       "id": "weekly-system",
       "step": 8,
-      "title": "Map MVME, weekly calendar, follow-up checklist",
+      "title": "Map weekly calendar, content cadence, follow-up checklist",
       "category": "operations",
       "priority": "high",
       "status": "not-started",

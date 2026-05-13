@@ -50,3 +50,43 @@ Thumbs.db
 # Lead PII — tracked locally only
 database/leads.json
 database/voices_training.json
+
+# GCP credential files
+gcp.json
+*.json.key
+
+# Brand Manager — added by brand-manager-bridge extension
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# Credentials — NEVER commit
+.env
+.env.local
+credentials*.json
+token*.json
+service-account*.json
+
+# Audio (use cloud storage; manifests stay in database/)
+audio/recordings/raw/*.wav
+audio/recordings/raw/*.mp3
+audio/recordings/*.wav
+audio/generated/*.wav
+audio/generated/*.mp3
+audio/transcripts/*.txt
+
+# Generated outputs (regenerable)
+outputs/social/*.png
+outputs/social/*.jpg
+outputs/social/*.mp4
+
+# Lead PII — tracked locally only
+database/leads.json
+
+# OS
+.DS_Store
+Thumbs.db
+drive-sa.json

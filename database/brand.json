@@ -1,3 +1,64 @@
 {
-  "_note": "This file is created by the Brand Manager Setup Wizard. Run 'Brand Manager: Setup Wizard' from the Command Palette to generate it, or copy database/brand.example.json and fill in your details."
+  "brand": {
+    "slug": "stoutwood-studios",
+    "name": "Stoutwood Studios",
+    "tagline": "Handcrafted Heirloom Furniture",
+    "owner": "Dave Arnold",
+    "niche": "create new original designs made of reclaimed wood from questionable sources!",
+    "stage": "launch"
+  },
+  "positioning": {
+    "uvp": "",
+    "target_audience": {
+      "who": "homeowners who want their environment to say something about themselves, totally unique.",
+      "pain": "they want their environment to stand out as completely unique, knowing that there's only ever gonna be that one piece. no identicals.",
+      "desire": "A piece theyll hand down"
+    },
+    "differentiators": [],
+    "competitors": ""
+  },
+  "voice": {
+    "tone": "bold, warm, pride, qualty craftsmanship.",
+    "vocabulary": [],
+    "avoid": [],
+    "persona": "The master woodworker who will shoot strait with you, always doing good work above all else."
+  },
+  "audio": {
+    "bed_mood": "classic rock",
+    "bed_volume": 0.35,
+    "voice_volume": 1,
+    "sample_rate": 48000,
+    "format": "wav",
+    "note": "Voice is always the primary signal. The bed is background texture only."
+  },
+  "location": "Petaluma, CA",
+  "platforms": {
+    "primary": [
+      "instagram",
+      "youtube",
+      "email",
+      "threads"
+    ],
+    "secondary": ["facebook_marketplace"],
+    "posting_frequency": {}
+  },
+  "content_pillars": [
+    {
+      "name": "diy",
+      "description": "you too can build this"
+    }
+  ],
+  "offer": {
+    "services": [
+      {
+        "id": "custom-order",
+        "name": "Custom Reclaimed Wood Piece",
+        "description": "One-of-a-kind furniture built to your spec from reclaimed wood. No two pieces identical.",
+        "price_range": "$700–$800",
+        "lead_time": "~3 weeks",
+        "inquiry": "DM on Instagram or Facebook Marketplace"
+      }
+    ],
+    "lead_magnet": ""
+  }
 }
