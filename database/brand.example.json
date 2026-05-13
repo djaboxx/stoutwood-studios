@@ -1,0 +1,63 @@
+{
+  "brand": {
+    "slug": "your-brand",
+    "name": "Your Brand Name",
+    "tagline": "One-line summary of what you do and for whom",
+    "owner": "Your Name",
+    "niche": "e.g. spiritual yoga counseling, fractional CFO, executive coaching",
+    "stage": "launch"
+  },
+  "positioning": {
+    "uvp": "I help [target market] achieve [outcome] by [unique method] that [eliminates pain point].",
+    "target_audience": {
+      "who": "e.g. burned-out tech executives, early-stage founders, senior women in transition",
+      "pain": "e.g. disconnected from body and purpose despite professional success",
+      "desire": "e.g. sustainable performance and inner clarity without leaving their career"
+    },
+    "differentiators": [
+      "e.g. 20+ years in corporate environments — I understand the pressure from the inside",
+      "e.g. Yoga philosophy meets executive coaching frameworks"
+    ],
+    "competitors": "e.g. generalist wellness coaches, meditation apps, traditional therapists"
+  },
+  "voice": {
+    "tone": "e.g. calm, grounded, direct, warm, non-dogmatic",
+    "vocabulary": ["transformation", "integration", "presence", "clarity"],
+    "avoid": ["hustle", "crush it", "hack", "guru"],
+    "persona": "e.g. A trusted guide who has walked the same path — not a teacher on a pedestal"
+  },
+  "audio": {
+    "bed_mood": "e.g. calm, grounded, meditative, minimal, warm — used to generate music beds",
+    "bed_volume": 0.35,
+    "voice_volume": 1.0,
+    "sample_rate": 48000,
+    "format": "wav",
+    "note": "Voice is always the primary signal. The bed is background texture only."
+  },
+  "platforms": {
+    "primary": ["instagram", "linkedin"],
+    "secondary": ["email", "youtube"],
+    "posting_frequency": {
+      "instagram": "3x per week",
+      "linkedin": "2x per week",
+      "email": "1x per week"
+    }
+  },
+  "content_pillars": [
+    {
+      "name": "pillar-one",
+      "description": "What this content category covers and why it matters to your audience"
+    }
+  ],
+  "offer": {
+    "services": [
+      {
+        "name": "e.g. 1:1 Counseling",
+        "format": "e.g. 60-min weekly sessions",
+        "price_range": "e.g. $300–500/month",
+        "ideal_client": "e.g. executive in transition"
+      }
+    ],
+    "lead_magnet": "e.g. 5-minute morning practice guide"
+  }
+}

@@ -1,0 +1,244 @@
+{
+  "name": "brand-manager-bridge",
+  "displayName": "Brand Manager Bridge",
+  "description": "Voice-first content production tools for the brand-manager workspace. Records voice, runs the voice→content pipeline, exposes brand assets to Copilot.",
+  "version": "0.1.0",
+  "publisher": "HappyPathway",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HappyPathway/brand-manager.git"
+  },
+  "homepage": "https://github.com/HappyPathway/brand-manager#readme",
+  "bugs": {
+    "url": "https://github.com/HappyPathway/brand-manager/issues"
+  },
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": ["Other", "AI"],
+  "activationEvents": ["onStartupFinished"],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "brandManager.setupWizard",
+        "title": "Brand Manager: Setup Wizard — Bootstrap Your Brand"
+      },
+      {
+        "command": "brandManager.recordVoice",
+        "title": "Brand Manager: Record Voice Memo"
+      },
+      {
+        "command": "brandManager.runVoiceToContent",
+        "title": "Brand Manager: Run Voice → Content Pipeline"
+      },
+      {
+        "command": "brandManager.openBrand",
+        "title": "Brand Manager: Open brand.json"
+      },
+      {
+        "command": "brandManager.showHomework",
+        "title": "Brand Manager: Show Strategic Homework"
+      },
+      {
+        "command": "brandManager.openHomework",
+        "title": "Brand Manager: Open homework.json"
+      },
+      {
+        "command": "brandManager.markHomeworkDone",
+        "title": "Brand Manager: Mark Homework Done"
+      },
+      {
+        "command": "brandManager.openMeetingReview",
+        "title": "Brand Manager: Review Meeting Transcript"
+      },
+      {
+        "command": "brandManager.manageCredentials",
+        "title": "Brand Manager: Manage Platform Credentials"
+      },
+      {
+        "command": "brandManager.syncDrive",
+        "title": "Brand Manager: Sync Content to Google Drive"
+      },
+      {
+        "command": "brandManager.fetchAnalytics",
+        "title": "Brand Manager: Fetch Platform Analytics"
+      }
+    ],
+    "configuration": {
+      "title": "Brand Manager",
+      "properties": {
+        "brandManager.pythonPath": {
+          "type": "string",
+          "default": "",
+          "description": "Path to the Python interpreter for running scripts/. Defaults to system python3."
+        },
+        "brandManager.homework.reminderIntervalHours": {
+          "type": "number",
+          "default": 0,
+          "description": "Periodic homework reminder interval in hours. 0 disables interval reminders (startup once-per-day reminder still runs)."
+        }
+      }
+    },
+    "languageModelTools": [
+      {
+        "name": "brandManager_loadBrand",
+        "displayName": "Load Brand DNA",
+        "modelDescription": "Read database/brand.json and return the full brand configuration (positioning, voice, audio settings, content pillars, offers).",
+        "canBeReferencedInPrompt": true,
+        "toolReferenceName": "loadBrand",
+        "icon": "$(book)",
+        "tags": ["brand"],
+        "inputSchema": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        }
+      },
+      {
+        "name": "brandManager_loadVisualStyle",
+        "displayName": "Load Visual Style",
+        "modelDescription": "Read database/visual-style.json and return the brand visual aesthetic (palette, composition rules, prohibitions, people policy).",
+        "canBeReferencedInPrompt": true,
+        "toolReferenceName": "loadVisualStyle",
+        "icon": "$(symbol-color)",
+        "tags": ["brand"],
+        "inputSchema": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        }
+      },
+      {
+        "name": "brandManager_runVoiceToContent",
+        "displayName": "Run Voice → Content Pipeline",
+        "modelDescription": "Run scripts/voice_to_content.py on a given voice WAV file. Returns the JSON manifest of produced artifacts (transcript, bed, mixed audio, content brief, cover image, waveform video).",
+        "canBeReferencedInPrompt": true,
+        "toolReferenceName": "runVoiceToContent",
+        "icon": "$(play)",
+        "tags": ["audio", "content"],
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "voiceFile": {
+              "type": "string",
+              "description": "Absolute or workspace-relative path to the voice WAV."
+            },
+            "skip": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["transcribe", "bed", "mix", "brief", "image", "video"]
+              },
+              "description": "Pipeline steps to skip."
+            }
+          },
+          "required": ["voiceFile"]
+        }
+      },
+      {
+        "name": "brandManager_listOverdueLeads",
+        "displayName": "List Overdue Leads",
+        "modelDescription": "Run scripts/manage_leads.py due and return the list of leads with overdue follow-ups.",
+        "canBeReferencedInPrompt": true,
+        "toolReferenceName": "listOverdueLeads",
+        "icon": "$(person)",
+        "tags": ["leads"],
+        "inputSchema": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        }
+      },
+      {
+        "name": "brandManager_listHomework",
+        "displayName": "List Strategic Homework",
+        "modelDescription": "Return strategic homework items from database/homework.json. Each item has id, step, title, category, priority, status, ai_doable (whether AI can draft it), ai_action (the command to run), owner_action, and notes. By default returns only open items (not done, not skipped).",
+        "canBeReferencedInPrompt": true,
+        "toolReferenceName": "listHomework",
+        "icon": "$(checklist)",
+        "tags": ["homework", "strategy"],
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "open_only": {
+              "type": "boolean",
+              "description": "If true (default), return only items not yet done or skipped. If false, return everything.",
+              "default": true
+            }
+          },
+          "required": []
+        }
+      },
+      {
+        "name": "brandManager_executeHomework",
+        "displayName": "Execute Homework AI Action",
+        "modelDescription": "Run the ai_action command for a specific homework item id. Only works for items where ai_doable is true. Returns the script output. After running, the item moves to in-progress; the owner reviews the draft and marks done with brandManager_markHomeworkDone.",
+        "canBeReferencedInPrompt": true,
+        "toolReferenceName": "executeHomework",
+        "icon": "$(play)",
+        "tags": ["homework", "strategy"],
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "The homework item id to execute (e.g. 'uvp-and-proof', 'audience-matrix')."
+            }
+          },
+          "required": ["id"]
+        }
+      },
+      {
+        "name": "brandManager_markHomeworkDone",
+        "displayName": "Mark Homework Done",
+        "modelDescription": "Mark a homework item as done by id. Use after the owner has reviewed and approved an AI draft, or after they've completed an owner-only task.",
+        "canBeReferencedInPrompt": true,
+        "toolReferenceName": "markHomeworkDone",
+        "icon": "$(check)",
+        "tags": ["homework", "strategy"],
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "The homework item id to mark done."
+            }
+          },
+          "required": ["id"]
+        }
+      },
+      {
+        "name": "brandManager_analyzeMeeting",
+        "displayName": "Analyze Meeting Transcript",
+        "modelDescription": "Run scripts/process_meeting.py analyze on a transcript string. Returns proposals JSON for homework status updates, brand DNA refinements, new leads, action items, and a meeting notes markdown. Does NOT write anything to disk — proposals are returned for the owner to approve. To apply approved proposals, the owner uses the Meeting Review webview (command: brandManager.openMeetingReview).",
+        "canBeReferencedInPrompt": true,
+        "toolReferenceName": "analyzeMeeting",
+        "icon": "$(comment-discussion)",
+        "tags": ["meeting", "strategy"],
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "transcript": {
+              "type": "string",
+              "description": "The full meeting transcript text."
+            }
+          },
+          "required": ["transcript"]
+        }
+      }
+    ]
+  },
+  "scripts": {
+    "build": "node esbuild.mjs",
+    "watch": "node esbuild.mjs --watch",
+    "vscode:prepublish": "npm run build"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.90.0",
+    "esbuild": "^0.21.0",
+    "typescript": "^5.4.0"
+  }
+}

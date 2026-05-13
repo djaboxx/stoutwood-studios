@@ -1,0 +1,21 @@
+name: lead-audit
+on:
+  schedule:
+    - cron: '0 14 * * 1,4'  # Mon + Thu 14:00 UTC
+  workflow_dispatch:
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install deps
+        run: pip install -r scripts/requirements.txt
+      - name: Show overdue follow-ups
+        run: |
+          # leads.json is gitignored — this only runs against committed data,
+          # which is the example file. In practice, run locally.
+          python scripts/manage_leads.py due || true

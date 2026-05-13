@@ -1,0 +1,24 @@
+# Brand Manager — Python dependencies
+# Install: python -m pip install -r scripts/requirements.txt
+
+# Gemini + Google AI
+google-genai>=1.0.0
+google-cloud-aiplatform>=1.60.0
+
+# Audio
+pydub>=0.25.1
+librosa>=0.10.0
+soundfile>=0.12.0
+
+# HTTP / APIs
+requests>=2.31.0
+httpx>=0.27.0
+
+# Gmail
+google-api-python-client>=2.100.0
+google-auth-httplib2>=0.2.0
+google-auth-oauthlib>=1.2.0
+
+# Utilities
+python-dotenv>=1.0.0
+rich>=13.0.0

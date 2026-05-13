@@ -1,0 +1,52 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+*.egg-info/
+.pytest_cache/
+
+# Node / VS Code extension
+node_modules/
+out/
+dist/
+*.vsix
+.vscode-test/
+
+# Credentials — NEVER commit
+.env
+.env.local
+credentials*.json
+token*.json
+service-account*.json
+
+# Audio (use cloud storage; manifests live in database/)
+audio/recordings/raw/*.wav
+audio/recordings/raw/*.mp3
+audio/recordings/*.wav
+audio/generated/*.wav
+audio/generated/*.mp3
+audio/transcripts/*.txt
+
+# Generated outputs (regenerable)
+outputs/social/*.png
+outputs/social/*.jpg
+outputs/social/*.mp4
+outputs/campaigns/sent/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.idea/
+*.swp
+*.swo
+
+# Lead PII — tracked locally only
+database/leads.json
+database/voices_training.json
