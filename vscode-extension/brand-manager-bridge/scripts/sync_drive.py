@@ -25,6 +25,7 @@ import argparse
 import json
 import logging
 import os
+import subprocess
 import sys
 from pathlib import Path
 
@@ -56,6 +57,15 @@ EXCLUDE_DIRS: set[str] = {"raw", "__pycache__"}
 
 # Never upload files matching these names (case-sensitive)
 EXCLUDE_FILES: set[str] = {"leads.json", "leads.example.json", ".DS_Store", "Thumbs.db"}
+
+# Files under these paths are treated as cloud-storage artifacts and must not be
+# tracked by git in this repo.
+DRIVE_ONLY_PREFIXES: tuple[str, ...] = (
+    "outputs/social",
+    "audio/recordings",
+    "audio/generated",
+    "audio/transcripts",
+)
 
 
 # ── Drive helpers ──────────────────────────────────────────────────────────
@@ -152,6 +162,51 @@ def sync_dir(
                     stats["failed"] += 1
 
 
+def _git_call(args: list[str]) -> int:
+    proc = subprocess.run(
+        args,
+        cwd=REPO_ROOT,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        check=False,
+    )
+    return proc.returncode
+
+
+def is_drive_only_path(local_path: Path) -> bool:
+    rel = local_path.relative_to(REPO_ROOT).as_posix()
+    return any(rel == prefix or rel.startswith(prefix + "/") for prefix in DRIVE_ONLY_PREFIXES)
+
+
+def is_git_safe_for_drive(local_path: Path) -> bool:
+    rel = local_path.relative_to(REPO_ROOT).as_posix()
+    # tracked => unsafe
+    if _git_call(["git", "ls-files", "--error-unmatch", rel]) == 0:
+        return False
+    # untracked but not ignored => unsafe
+    return _git_call(["git", "check-ignore", "-q", rel]) == 0
+
+
+def collect_git_safety_violations() -> list[Path]:
+    violations: list[Path] = []
+    for local_rel, _ in SYNC_MANIFEST:
+        root = REPO_ROOT / local_rel
+        if not root.exists():
+            continue
+        for child in sorted(root.rglob("*")):
+            if not child.is_file():
+                continue
+            if child.name in EXCLUDE_FILES:
+                continue
+            if any(part in EXCLUDE_DIRS for part in child.relative_to(root).parts[:-1]):
+                continue
+            if not is_drive_only_path(child):
+                continue
+            if not is_git_safe_for_drive(child):
+                violations.append(child)
+    return violations
+
+
 # ── Main ───────────────────────────────────────────────────────────────────
 
 def main() -> None:
@@ -179,6 +234,20 @@ def main() -> None:
         log.info("Total pending: %d", stats["pending"])
         print(json.dumps(stats))
         return
+
+    violations = collect_git_safety_violations()
+    if violations:
+        log.error("Refusing to sync: %d file(s) are in Drive-only paths but not git-safe.", len(violations))
+        for p in violations:
+            log.error("  %s", p.relative_to(REPO_ROOT))
+        first = violations[0].relative_to(REPO_ROOT).as_posix()
+        log.error(
+            "Fix by adding ignore rules or untracking files (example: git rm --cached \"%s\").",
+            first,
+        )
+        stats["failed"] += len(violations)
+        print(json.dumps(stats))
+        sys.exit(2)
 
     service = get_service(sa_json)
 
