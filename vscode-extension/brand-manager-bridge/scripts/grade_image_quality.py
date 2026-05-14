@@ -43,11 +43,16 @@ def parse_json_response(text: str) -> dict[str, Any]:
     clean = (text or "").strip()
     try:
         return json.loads(clean)
-    except json.JSONDecodeError:
+    except json.JSONDecodeError as first_error:
         m = re.search(r"\{.*\}", clean, re.DOTALL)
         if m:
-            return json.loads(m.group(0))
-        raise
+            try:
+                return json.loads(m.group(0))
+            except json.JSONDecodeError as fallback_error:
+                raise ValueError(
+                    "Model response did not contain valid JSON, including regex-extracted block."
+                ) from fallback_error
+        raise ValueError("Model response did not contain valid JSON.") from first_error
 
 
 def evaluate(images: list[Path], focus: str | None, model: str) -> dict[str, Any]:

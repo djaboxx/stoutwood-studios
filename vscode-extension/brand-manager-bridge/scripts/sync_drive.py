@@ -240,7 +240,11 @@ def main() -> None:
         log.error("Refusing to sync: %d file(s) are in Drive-only paths but not git-safe.", len(violations))
         for p in violations:
             log.error("  %s", p.relative_to(REPO_ROOT))
-        log.error("Fix by adding ignore rules or untracking files (e.g. git rm --cached <file>).")
+        first = violations[0].relative_to(REPO_ROOT).as_posix()
+        log.error(
+            "Fix by adding ignore rules or untracking files (example: git rm --cached \"%s\").",
+            first,
+        )
         stats["failed"] += len(violations)
         print(json.dumps(stats))
         sys.exit(2)
