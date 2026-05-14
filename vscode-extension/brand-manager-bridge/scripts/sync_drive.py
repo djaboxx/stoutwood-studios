@@ -173,7 +173,7 @@ def _git_call(args: list[str]) -> int:
     return proc.returncode
 
 
-def should_be_drive_only(local_path: Path) -> bool:
+def is_drive_only_path(local_path: Path) -> bool:
     rel = local_path.relative_to(REPO_ROOT).as_posix()
     return any(rel == prefix or rel.startswith(prefix + "/") for prefix in DRIVE_ONLY_PREFIXES)
 
@@ -200,7 +200,7 @@ def collect_git_safety_violations() -> list[Path]:
                 continue
             if any(part in EXCLUDE_DIRS for part in child.relative_to(root).parts[:-1]):
                 continue
-            if not should_be_drive_only(child):
+            if not is_drive_only_path(child):
                 continue
             if not is_git_safe_for_drive(child):
                 violations.append(child)
