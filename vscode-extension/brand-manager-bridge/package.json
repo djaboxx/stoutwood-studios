@@ -64,6 +64,10 @@
       {
         "command": "brandManager.fetchAnalytics",
         "title": "Brand Manager: Fetch Platform Analytics"
+      },
+      {
+        "command": "brandManager.gradeImageQuality",
+        "title": "Brand Manager: Grade Product Image Quality"
       }
     ],
     "configuration": {
@@ -226,6 +230,34 @@
             }
           },
           "required": ["transcript"]
+        }
+      },
+      {
+        "name": "brandManager_gradeImageQuality",
+        "displayName": "Grade Product Image Quality",
+        "modelDescription": "Review one or more product photos and return quality, style, and composition scores with specific capture guidance aimed at stronger engagement.",
+        "canBeReferencedInPrompt": true,
+        "toolReferenceName": "gradeImageQuality",
+        "icon": "$(device-camera)",
+        "tags": ["visual", "quality"],
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "imagePaths": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Absolute or workspace-relative image file paths to evaluate."
+            },
+            "focus": {
+              "type": "string",
+              "description": "Optional review focus such as style alignment, composition, or engagement-readiness."
+            },
+            "model": {
+              "type": "string",
+              "description": "Optional Gemini model override. Defaults to gemini-2.0-flash."
+            }
+          },
+          "required": ["imagePaths"]
         }
       }
     ]

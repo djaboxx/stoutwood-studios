@@ -7,9 +7,11 @@ VS Code extension for the brand-manager workspace. Provides:
   - `brandManager_loadVisualStyle` — read visual-style.json
   - `brandManager_runVoiceToContent` — run the voice → content pipeline
   - `brandManager_listOverdueLeads` — show leads with overdue follow-ups
+  - `brandManager_gradeImageQuality` — score product photos and give style/composition capture guidance to improve engagement
 - **Commands** (palette: `Brand Manager:`):
   - Record Voice Memo (stub — drop WAV in `audio/recordings/raw/` for now)
   - Run Voice → Content Pipeline (file picker → runs `voice_to_content.py`)
+  - Grade Product Image Quality (multi-select photos for quality/style/composition review)
   - Open brand.json
 
 ## Build

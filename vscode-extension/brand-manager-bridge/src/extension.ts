@@ -182,6 +182,28 @@ function registerLmTools(context: vscode.ExtensionContext) {
       },
     })
   );
+
+  context.subscriptions.push(
+    vscode.lm.registerTool('brandManager_gradeImageQuality', {
+      async invoke(options) {
+        const input = options.input as { imagePaths: string[]; focus?: string; model?: string };
+        const imagePaths = input.imagePaths ?? [];
+        if (imagePaths.length === 0) {
+          return new vscode.LanguageModelToolResult([
+            new vscode.LanguageModelTextPart('No image paths supplied.'),
+          ]);
+        }
+        const args = [...imagePaths];
+        if (input.focus) args.push('--focus', input.focus);
+        if (input.model) args.push('--model', input.model);
+        const result = await runScript('grade_image_quality.py', args);
+        const text = result.code === 0
+          ? result.stdout
+          : `Image quality grading failed (exit ${result.code}).\n\nSTDERR:\n${result.stderr}\n\nSTDOUT:\n${result.stdout}`;
+        return new vscode.LanguageModelToolResult([new vscode.LanguageModelTextPart(text)]);
+      },
+    })
+  );
 }
 
 function registerCommands(context: vscode.ExtensionContext) {
@@ -285,6 +307,48 @@ function registerCommands(context: vscode.ExtensionContext) {
             ch.appendLine(result.stderr);
             ch.show();
           }
+        }
+      );
+    })
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand('brandManager.gradeImageQuality', async () => {
+      const picked = await vscode.window.showOpenDialog({
+        canSelectFiles: true,
+        canSelectMany: true,
+        defaultUri: vscode.Uri.file(path.join(workspaceRoot(), 'outputs', 'social')),
+        filters: { Images: ['png', 'jpg', 'jpeg', 'webp', 'heic', 'heif'] },
+        openLabel: 'Grade selected images',
+      });
+      if (!picked || picked.length === 0) return;
+
+      const focus = await vscode.window.showInputBox({
+        title: 'Optional review focus',
+        placeHolder: 'e.g. style alignment, composition strength, engagement readiness',
+      });
+
+      await vscode.window.withProgress(
+        { location: vscode.ProgressLocation.Notification, title: 'Grading image quality…', cancellable: false },
+        async () => {
+          const args = picked.map((u) => u.fsPath);
+          if (focus && focus.trim()) args.push('--focus', focus.trim());
+          const result = await runScript('grade_image_quality.py', args);
+          const ch = vscode.window.createOutputChannel('Brand Manager');
+          if (result.code === 0) {
+            try {
+              const parsed = JSON.parse(result.stdout);
+              vscode.window.showInformationMessage(`Image quality review complete — overall score: ${parsed.overall_score ?? 'n/a'}.`);
+            } catch {
+              vscode.window.showInformationMessage('Image quality review complete.');
+            }
+            ch.appendLine(result.stdout);
+          } else {
+            vscode.window.showErrorMessage(`Image quality review failed (exit ${result.code}). See output.`);
+            ch.appendLine(result.stderr);
+            ch.appendLine(result.stdout);
+          }
+          ch.show();
         }
       );
     })

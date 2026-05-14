@@ -229,15 +229,28 @@ service-account*.json
 # Audio (use cloud storage; manifests stay in database/)
 audio/recordings/raw/*.wav
 audio/recordings/raw/*.mp3
+audio/recordings/raw/*.m4a
 audio/recordings/*.wav
+audio/recordings/*.mp3
+audio/recordings/*.m4a
+audio/recordings/*.aac
+audio/recordings/*.flac
 audio/generated/*.wav
 audio/generated/*.mp3
+audio/generated/*.m4a
+audio/generated/*.aac
+audio/generated/*.flac
 audio/transcripts/*.txt
 
 # Generated outputs (regenerable)
 outputs/social/*.png
 outputs/social/*.jpg
+outputs/social/*.jpeg
+outputs/social/*.webp
+outputs/social/*.heic
+outputs/social/*.heif
 outputs/social/*.mp4
+outputs/social/*.mov
 
 # Lead PII — tracked locally only
 database/leads.json
